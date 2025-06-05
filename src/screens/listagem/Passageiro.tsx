@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import api from "../../services/api"; // ajuste o caminho conforme sua estrutura
+import api from "../../services/api";
 
 interface Passageiro {
   id: number;

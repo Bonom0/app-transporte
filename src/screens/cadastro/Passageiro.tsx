@@ -18,9 +18,9 @@ export default function CadastroPassageiro() {
   const [cep, setCep] = useState("");
   const [rua, setRua] = useState("");
   const [contato, setContato] = useState("");
-  const [horarioEmbarque, setHorarioEmbarque] = useState(""); // formato esperado "HH:mm"
-  const [idMotorista, setIdMotorista] = useState(""); // string alfanumérica
-  const [tipo, setTipo] = useState(""); // string tipo simples
+  const [horarioEmbarque, setHorarioEmbarque] = useState("");
+  const [idMotorista, setIdMotorista] = useState("");
+  const [tipo, setTipo] = useState("");
   const [ativo, setAtivo] = useState(true);
 
   const salvarPassageiro = async () => {
