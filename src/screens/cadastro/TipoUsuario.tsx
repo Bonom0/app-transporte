@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { View, TextInput, TouchableOpacity, StyleSheet, Alert, Text } from "react-native";
 import api from "../../services/api";
 
 export default function CadastroTipoUsuario() {
@@ -24,20 +24,42 @@ export default function CadastroTipoUsuario() {
         onChangeText={setDescricao}
         style={styles.input}
       />
-      <Button title="Salvar" onPress={salvarTipo} />
+      
+      <TouchableOpacity style={styles.button} onPress={salvarTipo}>
+        <Text style={styles.buttonText}>Salvar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: "#f9f9f9",
     padding: 20,
+    justifyContent: "center",
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     marginBottom: 20,
-    borderRadius: 5,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    fontSize: 16,
+    elevation: 2,
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+    elevation: 3,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
-  Button,
+  TouchableOpacity,
   StyleSheet,
   Alert,
   ScrollView,
@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import api from "../../services/api";
+import { MaskedTextInput } from "react-native-mask-text";
+import { Feather } from "@expo/vector-icons";
 
 export default function CadastroPassageiro() {
   const [nome, setNome] = useState("");
@@ -27,6 +29,8 @@ export default function CadastroPassageiro() {
 
   const [motoristas, setMotoristas] = useState([]);
   const [tiposUsuario, setTiposUsuario] = useState([]);
+
+  const [senhaVisivel, setSenhaVisivel] = useState(false);
 
   useEffect(() => {
     async function carregarDados() {
@@ -111,6 +115,7 @@ export default function CadastroPassageiro() {
         onChangeText={setNome}
         style={styles.input}
       />
+
       <TextInput
         placeholder="Email"
         value={email}
@@ -118,39 +123,60 @@ export default function CadastroPassageiro() {
         style={styles.input}
         keyboardType="email-address"
       />
-      <TextInput
+
+      <MaskedTextInput
+        mask="999.999.999-99"
         placeholder="CPF"
         value={cpf}
         onChangeText={setCpf}
+        keyboardType="numeric"
         style={styles.input}
       />
-      <TextInput
-        placeholder="Senha"
-        value={senha}
-        onChangeText={setSenha}
-        secureTextEntry
-        style={styles.input}
-      />
-      <TextInput
+
+      <View style={styles.senhaContainer}>
+        <TextInput
+          placeholder="Senha"
+          value={senha}
+          onChangeText={setSenha}
+          secureTextEntry={!senhaVisivel}
+          style={styles.senhaInput}
+        />
+        <Feather
+          name={senhaVisivel ? "eye" : "eye-off"}
+          size={20}
+          color="#666"
+          onPress={() => setSenhaVisivel(!senhaVisivel)}
+          style={styles.iconeOlho}
+        />
+      </View>
+
+      <MaskedTextInput
+        mask="99999-999"
         placeholder="CEP"
         value={cep}
         onChangeText={setCep}
-        style={styles.input}
         keyboardType="numeric"
+        style={styles.input}
       />
+
       <TextInput
         placeholder="Rua"
         value={rua}
         onChangeText={setRua}
         style={styles.input}
       />
-      <TextInput
+
+      <MaskedTextInput
+        mask="(99) 99999-9999"
         placeholder="Contato"
         value={contato}
         onChangeText={setContato}
+        keyboardType="phone-pad"
         style={styles.input}
       />
-      <TextInput
+      
+      <MaskedTextInput
+        mask="99:99"
         placeholder="Horário de Embarque (HH:mm)"
         value={horarioEmbarque}
         onChangeText={setHorarioEmbarque}
@@ -180,7 +206,9 @@ export default function CadastroPassageiro() {
         <Switch value={ativo} onValueChange={setAtivo} />
       </View>
 
-      <Button title="Salvar" onPress={salvarPassageiro} />
+      <TouchableOpacity style={styles.button} onPress={salvarPassageiro}>
+        <Text style={styles.buttonText}>Salvar</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -188,29 +216,72 @@ export default function CadastroPassageiro() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    gap: 10,
-    backgroundColor: "#fff",
-    paddingBottom: 40,
+    backgroundColor: "#f9f9f9",
+    flexGrow: 1,
   },
   input: {
-    borderWidth: 1,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    marginBottom: 16,
     borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 20,
-    borderRadius: 5,
+    borderWidth: 1,
+    fontSize: 16,
+    elevation: 2,
   },
   label: {
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "600",
     marginBottom: 5,
+    color: "#333",
   },
   switchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
-    justifyContent: "flex-start",
+    marginBottom: 20,
+    gap: 10,
   },
   switchLabel: {
-  marginRight: 10,
-  fontSize: 16,
-},
+    fontSize: 16,
+    color: "#333",
+  },
+  button: {
+    backgroundColor: "#007BFF",
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 40,
+    elevation: 3,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  senhaContainer: {
+  flexDirection: "row",
+  alignItems: "center",
+  borderRadius: 10,
+  borderWidth: 1,
+  borderColor: "#ddd",
+  backgroundColor: "#fff",
+  marginBottom: 16,
+  paddingHorizontal: 10,
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.1,
+  shadowRadius: 2,
+  elevation: 2,
+  },
+  senhaInput: {
+    flex: 1,
+    paddingVertical: 12,
+    fontSize: 16,
+  },
+  iconeOlho: {
+    padding: 10,
+  },
 });
