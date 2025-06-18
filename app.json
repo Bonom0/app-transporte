@@ -24,7 +24,7 @@
       "package": "com.caio_bonomo.gestorpassageiro"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/iconsplash.png"
     },
     "extra": {
       "eas": {
