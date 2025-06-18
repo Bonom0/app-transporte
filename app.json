@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app-gestropassageiro",
-    "slug": "app-gestropassageiro",
+    "name": "GestorPassageiro",
+    "slug": "gestor-passageiro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/iconsplash.png",
@@ -20,10 +20,16 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.caio_bonomo.gestorpassageiro"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3591857d-d625-42dc-905f-7ba88f0e27ea"
+      }
     }
   }
 }
