@@ -48,7 +48,7 @@ export default function ListagemPassageiro() {
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Text style={styles.nome}>{item.nome}</Text>
-            <Text style={styles.email}>{item.email}</Text>
+            <Text style={styles.email}>E-mail: {item.email}</Text>
           </View>
         )}
       />
