@@ -17,6 +17,8 @@ import Home from "./src/screens/Home";
 import PassageiroListagem from "./src/screens/listagem/Passageiro";
 import EmpresaListagem from "./src/screens/listagem/Empresa";
 import TipoUsuarioListagem from "./src/screens/listagem/TipoUsuario";
+import ListagemOperador from "./src/screens/listagem/Operador";
+import ListagemMotorista from "./src/screens/listagem/Motorista";
 
 const Drawer = createDrawerNavigator();
 
@@ -125,13 +127,13 @@ export default function App() {
           name="ListagemPassageiro"
           component={PassageiroListagem}
         />
-        {/* <Drawer.Screen name="ListagemOperador" component={ListagemOperador} /> */}
+        <Drawer.Screen name="ListagemOperador" component={ListagemOperador} />
         <Drawer.Screen
           name="ListagemTipoUsuario"
           component={TipoUsuarioListagem}
         />
         <Drawer.Screen name="ListagemEmpresa" component={EmpresaListagem} />
-        {/* <Drawer.Screen name="ListagemMotorista" component={ListagemMotorista} /> */}
+        <Drawer.Screen name="ListagemMotorista" component={ListagemMotorista} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
