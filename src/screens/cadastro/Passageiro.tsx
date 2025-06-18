@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -7,7 +7,9 @@ import {
   Alert,
   ScrollView,
   Switch,
+  Text,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import api from "../../services/api";
 
 export default function CadastroPassageiro() {
@@ -22,6 +24,27 @@ export default function CadastroPassageiro() {
   const [idMotorista, setIdMotorista] = useState("");
   const [tipo, setTipo] = useState("");
   const [ativo, setAtivo] = useState(true);
+
+  const [motoristas, setMotoristas] = useState([]);
+  const [tiposUsuario, setTiposUsuario] = useState([]);
+
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        const [resMotoristas, resTipos] = await Promise.all([
+          api.get("/motorista"),
+          api.get("/tipoUsuario"),
+        ]);
+        setMotoristas(resMotoristas.data);
+        setTiposUsuario(resTipos.data);
+      } catch (error) {
+        Alert.alert("Erro", "Falha ao carregar dados");
+        console.error(error);
+      }
+    }
+
+    carregarDados();
+  }, []);
 
   const salvarPassageiro = async () => {
     try {
@@ -100,7 +123,6 @@ export default function CadastroPassageiro() {
         value={cpf}
         onChangeText={setCpf}
         style={styles.input}
-        keyboardType="numeric"
       />
       <TextInput
         placeholder="Senha"
@@ -136,21 +158,28 @@ export default function CadastroPassageiro() {
         keyboardType="numeric"
         maxLength={5}
       />
-      <TextInput
-        placeholder="ID do Motorista"
-        value={idMotorista}
-        onChangeText={setIdMotorista}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Tipo de Usuário"
-        value={tipo}
-        onChangeText={setTipo}
-        style={styles.input}
-      />
+      
+      <Text style={styles.label}>Motorista</Text>
+      <Picker selectedValue={idMotorista} onValueChange={setIdMotorista} style={styles.input}>
+        <Picker.Item label="Selecione um motorista" value="" />
+        {motoristas.map((m: any) => (
+          <Picker.Item key={m.id} label={m.nome} value={m.id} />
+        ))}
+      </Picker>
+
+      <Text style={styles.label}>Tipo de Usuário</Text>
+      <Picker selectedValue={tipo} onValueChange={setTipo} style={styles.input}>
+        <Picker.Item label="Selecione um tipo" value="" />
+        {tiposUsuario.map((t: any) => (
+          <Picker.Item key={t.id} label={t.descricao} value={t.id} />
+        ))}
+      </Picker>
+
       <View style={styles.switchContainer}>
+        <Text style={styles.switchLabel}>Ativo</Text>
         <Switch value={ativo} onValueChange={setAtivo} />
       </View>
+
       <Button title="Salvar" onPress={salvarPassageiro} />
     </ScrollView>
   );
@@ -161,12 +190,18 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 10,
     backgroundColor: "#fff",
+    paddingBottom: 40,
   },
   input: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingVertical: 8,
-    paddingHorizontal: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginBottom: 20,
+    borderRadius: 5,
+  },
+  label: {
+    fontWeight: "bold",
+    marginBottom: 5,
   },
   switchContainer: {
     flexDirection: "row",
@@ -174,4 +209,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     justifyContent: "flex-start",
   },
+  switchLabel: {
+  marginRight: 10,
+  fontSize: 16,
+},
 });
