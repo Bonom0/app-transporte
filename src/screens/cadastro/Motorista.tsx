@@ -1,6 +1,12 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useEffect } from "react";
+import { View, TextInput, Button, StyleSheet, Alert, Text } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import api from "../../services/api";
+
+interface TipoUsuario {
+  id: string;
+  descricao: string;
+}
 
 export default function Motorista() {
   const [nome, setNome] = useState("");
@@ -8,24 +14,44 @@ export default function Motorista() {
   const [contato, setContato] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [tipoUsuarioId, setTipoUsuarioId] = useState("");
+
+  const [tiposUsuario, setTiposUsuario] = useState<TipoUsuario[]>([]);
+
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        const resTipos = await api.get("/tipoUsuario");
+        setTiposUsuario(resTipos.data);
+      } catch (error) {
+        Alert.alert("Erro", "Falha ao carregar tipos de usuário");
+      }
+    }
+
+    carregarDados();
+  }, []);
 
   const salvar = async () => {
-    if (!nome || !cpf || !contato || !email || !senha) {
+    if (!nome || !cpf || !contato || !email || !senha || !tipoUsuarioId) {
       Alert.alert("Erro", "Preencha todos os campos");
       return;
     }
     try {
-      const dados = { nome, cpf, contato, email, senha };
-      const listaString = await AsyncStorage.getItem("motoristas");
-      const lista = listaString ? JSON.parse(listaString) : [];
-      lista.push(dados);
-      await AsyncStorage.setItem("motoristas", JSON.stringify(lista));
-      Alert.alert("Sucesso", "Motorista salvo!");
+      await api.post("/motorista", {
+        nome,
+        cpf,
+        contato,
+        email,
+        senha,
+        tipo: tipoUsuarioId,
+      });
+      Alert.alert("Sucesso", "Motorista salvo com sucesso!");
       setNome("");
       setCpf("");
       setContato("");
       setEmail("");
       setSenha("");
+      setTipoUsuarioId("");
     } catch (error) {
       Alert.alert("Erro", "Falha ao salvar");
       console.error(error);
@@ -40,18 +66,21 @@ export default function Motorista() {
         onChangeText={setNome}
         style={styles.input}
       />
+
       <TextInput
         placeholder="CPF"
         value={cpf}
         onChangeText={setCpf}
         style={styles.input}
       />
+
       <TextInput
         placeholder="Contato"
         value={contato}
         onChangeText={setContato}
         style={styles.input}
       />
+
       <TextInput
         placeholder="E-mail"
         value={email}
@@ -59,12 +88,26 @@ export default function Motorista() {
         style={styles.input}
         keyboardType="email-address"
       />
+
       <TextInput
         placeholder="Senha"
         value={senha}
         onChangeText={setSenha}
         style={styles.input}
       />
+
+      <Text style={styles.label}>Tipo de Usuário</Text>
+      <Picker
+        selectedValue={tipoUsuarioId}
+        onValueChange={(itemValue) => setTipoUsuarioId(itemValue)}
+        style={styles.input}
+      >
+        <Picker.Item label="Selecione o tipo de usuário" value="" />
+        {tiposUsuario.map((tipo) => (
+          <Picker.Item key={tipo.id} label={tipo.descricao} value={tipo.id} />
+        ))}
+      </Picker>
+
       <Button title="Salvar" onPress={salvar} />
     </View>
   );
@@ -78,5 +121,9 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     borderRadius: 5,
+  },
+  label: {
+    fontWeight: "bold",
+    marginBottom: 5,
   },
 });
